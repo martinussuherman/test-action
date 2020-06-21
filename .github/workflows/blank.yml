@@ -8,8 +8,6 @@ on:
   push:
     branches:
       - master
-      - test
-      - another
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -34,3 +32,9 @@ jobs:
         echo Ref: "${{ github.ref }}"
         echo Actor "${{ github.actor }}"
         echo Workspace "${{ github.workspace }}"
+        VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+        echo VERSION=$VERSION
+        [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+        echo VERSION=$VERSION
+        [ "$VERSION" == "master" ] && VERSION=latest
+        echo VERSION=$VERSION
