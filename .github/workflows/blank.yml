@@ -33,6 +33,10 @@ jobs:
         echo Actor="${{ github.actor }}"
         echo Workspace="${{ github.workspace }}"
         echo Sha="${{ github.sha }}"
+        echo Rev=$(git rev-parse --short ${{ github.sha }})
+        echo BuildDate=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+        IMAGE_ID=docker.pkg.github.com/${{ github.repository }}
+        echo IMAGE_ID=$IMAGE_ID
         VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
         echo VERSION=$VERSION
         [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
