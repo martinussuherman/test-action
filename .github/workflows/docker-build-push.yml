@@ -1,0 +1,52 @@
+name: Docker Build and Push Image
+
+on:
+  push:
+    branches:
+    - master
+    - test
+    - another  
+
+  release:
+    types: 
+    - published
+    - edited
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+
+    - name: Set image info
+      run: |
+        AUTHORS=$(curl -s https://api.github.com/users/${{github.repository_owner}} | grep '"name"')
+        AUTHORS=$(echo $AUTHORS | sed -e 's!  "name": !!; s!"!!g; s!,!!g;')
+        
+        URL=https://hub.docker.com/r/${{ github.repository }}
+
+        echo "::set-env name=AUTHORS::$AUTHORS"
+        echo "::set-env name=URL::$URL"
+
+    - name: Build and push Docker images
+      uses: docker/build-push-action@v1.1.0
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        repository: ${{ github.repository }}
+        tag_with_ref: true
+        # Always attempt to pull a newer version of the image
+        #always_pull: # optional
+        # Comma-delimited list of build-time variables
+        #build_args: # optional
+        # Comma-delimited list of images to consider as cache sources
+        #cache_froms: # optional
+        # Comma-delimited list of labels to add to the built image
+        labels: org.opencontainers.image.authors=${{ env.AUTHORS }},org.opencontainers.image.url=${{ env.URL }}
+        add_git_labels: true
