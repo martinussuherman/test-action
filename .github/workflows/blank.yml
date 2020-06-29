@@ -59,7 +59,7 @@ jobs:
       run: |
         echo Ref="${{ github.ref }}"
         echo Workspace="${{ github.workspace }}"
-        echo LABEL_MAINTAINER=$(curl -s https://api.github.com/users/martinussuherman | grep name -w | sed -e 's!  "name": !!; s!"!!g; s!,!!g;')
+        echo LABEL_MAINTAINER=$(curl -s https://api.github.com/users/${{github.repository_owner}} | grep name -w | sed -e 's!  "name": !!; s!"!!g; s!,!!g;')
         echo LABEL_BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
         echo LABEL_IMAGE_NAME=${{ github.repository }}
         echo LABEL_URL=${{ env.IMAGE_URL }}
