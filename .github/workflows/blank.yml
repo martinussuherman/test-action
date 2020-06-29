@@ -59,15 +59,16 @@ jobs:
       run: |
         echo Ref="${{ github.ref }}"
         echo Workspace="${{ github.workspace }}"
-        echo LABEL_MAINTAINER=$(curl -s https://api.github.com/users/${{github.repository_owner}} | grep name -w | sed -e 's!  "name": !!; s!"!!g; s!,!!g;')
+        echo LABEL_MAINTAINER=$(curl -s https://api.github.com/users/${{github.repository_owner}} | grep '"name"' | sed -e 's!  "name": !!; s!"!!g; s!,!!g;')
         echo LABEL_BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
-        echo LABEL_IMAGE_NAME=${{ github.repository }}
+        echo LABEL_DESCRIPTION=$(curl -s https://api.github.com/repos/${{github.repository}} | grep '"description"' -m 1 | sed -e 's!  "description": !!; s!"!!g; s!,!!g;')
+        echo LABEL_LICENSE=$(curl -s https://api.github.com/repos/${{github.repository}} | grep '"spdx_id"' -m 1 | sed -e 's!    "spdx_id": !!; s!"!!g; s!,!!g;')
+        echo LABEL_NAME=${{ github.repository }}
         echo LABEL_URL=${{ env.IMAGE_URL }}
         echo LABEL_VCS_REF=`git rev-parse --short ${{ github.sha }}` 
         echo LABEL_VCS_URL=`git config --get remote.origin.url` 
         echo LABEL_VENDOR=${{ github.repository_owner }}
         echo LABEL_VERSION=${{ env.IMAGE_VERSION }}
-
 
     - name: Display variables
       run: |
