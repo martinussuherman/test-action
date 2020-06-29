@@ -16,9 +16,6 @@ on:
     - published
     - edited
 
-env:
-  IMAGE_NAME: test-action
-
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -33,7 +30,10 @@ jobs:
 
     - name: Get image id and version
       run: |
-        IMG_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
+        IMG_NAME=${{ github.repository }}
+        IMG_NAME=$(echo $IMG_NAME | sed -e 's!${{ github.repository_owner }}/!!')
+        
+        IMG_ID=docker.pkg.github.com/${{ github.repository }}/$IMG_NAME
           
         # Change all uppercase to lowercase
         IMG_ID=$(echo $IMG_ID | tr '[A-Z]' '[a-z]')
@@ -52,10 +52,12 @@ jobs:
         echo "::set-env name=IMAGE_ID::$IMG_ID"
         echo "::set-env name=IMAGE_VERSION::$IMG_VER"
         echo "::set-env name=IMAGE_URL::$IMG_URL"
+        echo "::set-env name=IMAGE_NAME::$IMG_NAME"
 
     # Runs a set of commands using the runners shell
     - name: Run a multi-line script
       run: |
+        echo Config==`git config`
         echo Ref="${{ github.ref }}"
         echo Workspace="${{ github.workspace }}"
         echo LABEL_MAINTAINER=${{github.repository_owner}}
@@ -64,7 +66,7 @@ jobs:
         echo LABEL_URL=${{ env.IMAGE_URL }}
         echo LABEL_VCS_REF=`git rev-parse --short ${{ github.sha }}` 
         echo LABEL_VCS_URL=`git config --get remote.origin.url` 
-        echo LABEL_VENDOR=${{ github.actor }}
+        echo LABEL_VENDOR=${{ github.repository_owner }}
         echo LABEL_VERSION=${{ env.IMAGE_VERSION }}
 
 
