@@ -58,14 +58,14 @@ jobs:
       run: |
         echo Ref="${{ github.ref }}"
         echo Workspace="${{ github.workspace }}"
-        echo LABEL_MAINTAINER=$({{github.repository_owner}})
+        echo LABEL_MAINTAINER=${{github.repository_owner}}
         echo LABEL_BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
-        echo LABEL_IMAGE_NAME=$({{ github.repository }}) 
-        echo LABEL_URL=$({{ env.IMAGE_URL }}
+        echo LABEL_IMAGE_NAME=${{ github.repository }}
+        echo LABEL_URL=${{ env.IMAGE_URL }}
         echo LABEL_VCS_REF=`git rev-parse --short ${{ github.sha }}` 
         echo LABEL_VCS_URL=`git config --get remote.origin.url` 
-        echo LABEL_VENDOR=$({{ github.actor }}) 
-        echo LABEL_VERSION=$({{ env.IMAGE_VERSION }}) 
+        echo LABEL_VENDOR=${{ github.actor }}
+        echo LABEL_VERSION=${{ env.IMAGE_VERSION }}
 
 
     - name: Display variables
