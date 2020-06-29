@@ -8,10 +8,16 @@ on:
   push:
     branches:
       - master
+      - test
+      - another
+
   release:
     types: 
       - published
       - edited
+
+env:
+  IMAGE_NAME: test-action
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -25,6 +31,27 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
+    - name: Get image id and version
+      run: |
+        IMG_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
+        IMG_URL=https://$IMAGE_NAME
+          
+        # Change all uppercase to lowercase
+        IMG_ID=$(echo $IMG_ID | tr '[A-Z]' '[a-z]')
+
+        # Strip git ref prefix from version
+        VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+
+        # Strip "v" prefix from tag name
+        [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+
+        # Use Docker `latest` tag convention
+        [ "$VERSION" == "master" ] && VERSION=latest
+
+        echo '::set-env name=IMAGE_ID::$IMG_ID'
+        echo '::set-env name=IMAGE_VERSION::$VERSION'
+        echo '::set-env name=IMAGE_URL::$IMG_URL'
+
     # Runs a set of commands using the runners shell
     - name: Run a multi-line script
       run: |
@@ -36,17 +63,10 @@ jobs:
         echo Rev=$(git rev-parse --short ${{ github.sha }})
         echo BuildDate=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
         
-        IMAGE_NAME=${{ github.repository }}
-        IMAGE_ID=docker.pkg.github.com/${{ github.repository }}
-        VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-        echo VERSION=$VERSION
-        [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-        echo VERSION=$VERSION
-        [ "$VERSION" == "master" ] && VERSION=latest
-        
     - name: Display variables
       run: |
-        echo IMAGE_NAME=$IMAGE_NAME
+        echo IMAGE_URL=$IMAGE_URL
         echo IMAGE_ID=$IMAGE_ID
-        echo VERSION=$VERSION
+        echo VERSION=$IMAGE_VERSION
+        echo IMAGE_NAME=$IMAGE_NAME
         echo tag=$IMAGE_NAME:$VERSION $IMAGE_ID:$VERSION
