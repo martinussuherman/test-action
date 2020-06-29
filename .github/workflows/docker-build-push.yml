@@ -27,11 +27,19 @@ jobs:
     - name: Set image info
       run: |
         AUTHORS=$(curl -s https://api.github.com/users/${{github.repository_owner}} | grep '"name"')
-        AUTHORS=$(echo $AUTHORS | sed -e 's!  "name": !!; s!"!!g; s!,!!g;')
-        
-        URL=https://hub.docker.com/r/${{ github.repository }}
+        AUTHORS=$(echo $AUTHORS | sed -e 's!"name":!!; s!"!!g; s!,!!g; s!^[ \t]*!!;')
 
+        DESCRIPTION=$(curl -s https://api.github.com/repos/${{github.repository}} | grep '"description"' -m 1)
+        DESCRIPTION=$(echo $DESCRIPTION | sed -e 's!"description": !!; s!"!!g; s!,!!g; s!^[ \t]*!!;')
+        
+        LICENSES=$(curl -s https://api.github.com/repos/${{github.repository}} | grep '"spdx_id"' -m 1)
+        LICENSES=$(echo $LICENSES | sed -e 's!"spdx_id": !!; s!"!!g; s!,!!g; s!^[ \t]*!!;')
+
+        URL=https://hub.docker.com/r/${{ github.repository }}
+        
         echo "::set-env name=AUTHORS::$AUTHORS"
+        echo "::set-env name=DESCRIPTION::$DESCRIPTION"
+        echo "::set-env name=LICENSES::$LICENSES"
         echo "::set-env name=URL::$URL"
 
     - name: Build and push Docker images
@@ -48,5 +56,5 @@ jobs:
         # Comma-delimited list of images to consider as cache sources
         #cache_froms: # optional
         # Comma-delimited list of labels to add to the built image
-        labels: org.opencontainers.image.authors=${{ env.AUTHORS }},org.opencontainers.image.url=${{ env.URL }}
+        labels: org.opencontainers.image.authors=${{ env.AUTHORS }},org.opencontainers.image.description=${{ env.DESCRIPTION }},org.opencontainers.image.licenses=${{ env.LICENSES }},org.opencontainers.image.url=${{ env.URL }}
         add_git_labels: true
