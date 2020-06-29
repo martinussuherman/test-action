@@ -48,9 +48,9 @@ jobs:
         # Use Docker `latest` tag convention
         [ "$VERSION" == "master" ] && VERSION=latest
 
-        echo '::set-env name=IMAGE_ID::$IMG_ID'
-        echo '::set-env name=IMAGE_VERSION::$VERSION'
-        echo '::set-env name=IMAGE_URL::$IMG_URL'
+        echo "::set-env name=IMAGE_ID::$IMG_ID"
+        echo "::set-env name=IMAGE_VERSION::$VERSION"
+        echo "::set-env name=IMAGE_URL::$IMG_URL"
 
     # Runs a set of commands using the runners shell
     - name: Run a multi-line script
@@ -65,8 +65,8 @@ jobs:
         
     - name: Display variables
       run: |
-        echo IMAGE_URL=$IMAGE_URL
-        echo IMAGE_ID=$IMAGE_ID
-        echo VERSION=$IMAGE_VERSION
-        echo IMAGE_NAME=$IMAGE_NAME
+        echo IMAGE_URL=${{ env.IMAGE_URL }}
+        echo IMAGE_ID=${{ env.IMAGE_ID }}
+        echo VERSION=${{ env.IMAGE_VERSION }}
+        echo IMAGE_NAME=${{ env.IMAGE_NAME }}
         echo tag=$IMAGE_NAME:$VERSION $IMAGE_ID:$VERSION
