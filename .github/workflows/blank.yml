@@ -80,11 +80,12 @@ jobs:
       run: |
         GOPATH=$HOME/go
         GO111MODULE=on
+        echo $GOPATH
+        echo $GOBIN
         env | grep GO
         go get github.com/mvdan/sh/cmd/shfmt/
         go get github.com/goreleaser/nfpm/cmd/nfpm
         pwd
         ls -al $GOPATH
         ls -al $GOBIN
-#        $GOROOT/bin/shfmt -h
-        
+        $GOBIN/shfmt -h
