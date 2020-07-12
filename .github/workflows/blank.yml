@@ -75,5 +75,12 @@ jobs:
         echo IMAGE_ID=${{ env.IMAGE_ID }}
         echo IMAGE_NAME=${{ env.IMAGE_NAME }}
         echo tag=${{ env.IMAGE_NAME }} ${{ env.IMAGE_ID }}:${{ env.IMAGE_VERSION }}
-        printenv
+        
+    - name: Try go module
+      run: |
         env
+        GO111MODULE=on
+        go get github.com/mvdan/sh/cmd/shfmt/
+        go get github.com/goreleaser/nfpm/cmd/nfpm
+        $GOROOT/bin shfmt -h
+        
