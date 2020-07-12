@@ -82,7 +82,8 @@ jobs:
         GO111MODULE=on
         go get github.com/mvdan/sh/cmd/shfmt/
         go get github.com/goreleaser/nfpm/cmd/nfpm
-        ls -al $RUNNER_TOOL_CACHE/go
+        pwd
+        ls -al bin
         ls -al $GOROOT/bin
 #        $GOROOT/bin/shfmt -h
         
