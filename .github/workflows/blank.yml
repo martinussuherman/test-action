@@ -78,12 +78,13 @@ jobs:
         
     - name: Try go module
       run: |
-        env | grep GO
         GOPATH=$HOME/go
         GO111MODULE=on
+        env | grep GO
         go get github.com/mvdan/sh/cmd/shfmt/
         go get github.com/goreleaser/nfpm/cmd/nfpm
         pwd
-        ls -al $GOROOT/bin
+        ls -al $GOPATH
+        ls -al $GOBIN
 #        $GOROOT/bin/shfmt -h
         
