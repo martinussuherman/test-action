@@ -75,3 +75,5 @@ jobs:
         echo IMAGE_ID=${{ env.IMAGE_ID }}
         echo IMAGE_NAME=${{ env.IMAGE_NAME }}
         echo tag=${{ env.IMAGE_NAME }} ${{ env.IMAGE_ID }}:${{ env.IMAGE_VERSION }}
+        printenv
+        env
