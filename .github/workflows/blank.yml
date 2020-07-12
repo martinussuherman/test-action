@@ -79,6 +79,7 @@ jobs:
     - name: Try go module
       run: |
         GOPATH=$HOME/go
+        GOBIN=$GOPATH/bin
         GO111MODULE=on
         echo $GOPATH
         echo $GOBIN
