@@ -1,16 +1,18 @@
 name: Docker Build and Push Image
 
 on:
-  push:
-    branches:
-    - master
-    - test
-    - another  
+  workflow_dispatch:
 
-  release:
-    types: 
-    - released
-    - edited
+# push:
+#    branches:
+#    - master
+#    - test
+#    - another  
+
+#  release:
+#    types: 
+#    - released
+#    - edited
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -67,4 +69,4 @@ jobs:
         #cache_froms: # optional
         # Comma-delimited list of labels to add to the built image
         labels: org.opencontainers.image.description=${{ env.DESCRIPTION }},org.opencontainers.image.licenses=${{ env.LICENSES }},org.opencontainers.image.url=${{ env.URL }},org.opencontainers.image.vendor=${{ env.VENDOR }},org.opencontainers.image.version=${{ env.VERSION }}
-        add_git_labels: true
+        #add_git_labels: true
