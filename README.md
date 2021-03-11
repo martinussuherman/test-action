@@ -1,5 +1,5 @@
 # test-action
 
-Github Actions for building and pushing image to Docker Hub
+Github Actions example for building and pushing image to Docker Hub.
 
 The Action run on workflow_dispatch trigger (manual run).
