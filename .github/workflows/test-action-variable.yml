@@ -68,9 +68,9 @@ jobs:
 
       - name: Display variables
         run: |
-          echo version=${{ steps.vardef.otherdef.version }}
-          echo tags=${{ steps.vardef.otherdef.tags }}
-          echo created=${{ steps.vardef.otherdef.created }}
+          echo version=${{ steps.otherdef.outputs.version }}
+          echo tags=${{ steps.otherdef.outputs.tags }}
+          echo created=${{ steps.otherdef.outputs.created }}
           echo imageId=${{ steps.vardef.outputs.imageId }}
           echo imageName=${{ steps.vardef.outputs.imageName }}
           echo imageUrl=${{ steps.vardef.outputs.imageUrl }}
