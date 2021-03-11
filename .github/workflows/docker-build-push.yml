@@ -3,70 +3,41 @@ name: Docker Build and Push Image
 on:
   workflow_dispatch:
 
-# push:
-#    branches:
-#    - master
-#    - test
-#    - another  
-
-#  release:
-#    types: 
-#    - released
-#    - edited
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  docker:
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    - name: Set image info
-      run: |
-        DESCRIPTION=$(curl -s https://api.github.com/repos/${{github.repository}} | grep '"description"' -m 1)
-        DESCRIPTION=$(echo $DESCRIPTION | sed -e 's!"description": !!; s!"!!g; s!,!!g; s!^[ \t]*!!;')
-        
-        LICENSES=$(curl -s https://api.github.com/repos/${{github.repository}} | grep '"spdx_id"' -m 1)
-        LICENSES=$(echo $LICENSES | sed -e 's!"spdx_id": !!; s!"!!g; s!,!!g; s!^[ \t]*!!;')
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
 
-        URL=https://hub.docker.com/r/${{ github.repository }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
 
-        VENDOR=$(curl -s https://api.github.com/users/${{github.repository_owner}} | grep '"name"')
-        VENDOR=$(echo $VENDOR | sed -e 's!"name":!!; s!"!!g; s!,!!g; s!^[ \t]*!!;')
+      - name: Login to DockerHub
+        uses: docker/login-action@v1 
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-        # Strip git ref prefix from version
-        VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+      - name: Build and push arm64v8 image
+        uses: docker/build-push-action@v2
+        with:
+          file: ./arm64v8/Dockerfile
+          context: .
+          platforms: linux/arm64
+          push: true
+          tags: arm64v8
 
-        # Strip "v" prefix from tag name
-        [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+      - name: Build and push arm32v7 image
+        uses: docker/build-push-action@v2
+        with:
+          file: ./arm32v7/Dockerfile
+          context: .
+          platforms: linux/arm
+          push: true
+          tags: arm32v7
 
-        # Use Docker `latest` tag convention
-        [ "$VERSION" == "master" ] && VERSION=latest
-
-        echo "::set-env name=DESCRIPTION::$DESCRIPTION"
-        echo "::set-env name=LICENSES::$LICENSES"
-        echo "::set-env name=URL::$URL"
-        echo "::set-env name=VENDOR::$VENDOR"
-        echo "::set-env name=VERSION::$VERSION"
-
-    - name: Build and push Docker images
-      uses: docker/build-push-action@v1.1.0
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-        repository: ${{ github.repository }}
-        tag_with_ref: true
-        # Always attempt to pull a newer version of the image
-        #always_pull: # optional
-        # Comma-delimited list of build-time variables
-        #build_args: # optional
-        # Comma-delimited list of images to consider as cache sources
-        #cache_froms: # optional
-        # Comma-delimited list of labels to add to the built image
-        labels: org.opencontainers.image.description=${{ env.DESCRIPTION }},org.opencontainers.image.licenses=${{ env.LICENSES }},org.opencontainers.image.url=${{ env.URL }},org.opencontainers.image.vendor=${{ env.VENDOR }},org.opencontainers.image.version=${{ env.VERSION }}
-        #add_git_labels: true
