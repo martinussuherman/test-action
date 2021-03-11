@@ -1,0 +1,51 @@
+name: Test Action Variable
+
+on:
+  workflow_dispatch:
+
+  release:
+    types: 
+    - published
+    - edited
+
+jobs:
+  testing:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Variable Definition
+        id: vardef
+        run: |
+          IMG_NAME=${{ github.repository }}
+          IMG_NAME=$(echo $IMG_NAME | sed -e 's!${{ github.repository_owner }}/!!')
+
+          IMG_ID=docker.pkg.github.com/${{ github.repository }}/$IMG_NAME
+
+          # Change all uppercase to lowercase
+          IMG_ID=$(echo $IMG_ID | tr '[A-Z]' '[a-z]')
+          IMG_URL=https://$IMG_ID
+
+          # Strip git ref prefix from version
+          IMG_VER=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+
+          # Strip "v" prefix from tag name
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && IMG_VER=$(echo $IMG_VER | sed -e 's/^v//')
+
+          # Use Docker `latest` tag convention
+          [ "$IMG_VER" == "master" ] && IMG_VER=latest
+
+          echo ::set-output name=imageId::${IMG_ID}
+          echo ::set-output name=imageVersion::${IMG_VER}
+          echo ::set-output name=imageUrl::${IMG_URL}
+          echo ::set-output name=imageName::${IMG_NAME}
+
+      - name: Display variables
+        run: |
+          echo imageId=${{ steps.vardef.outputs.imageId }}
+          echo imageName=${{ steps.vardef.outputs.imageName }}
+          echo imageUrl=${{ steps.vardef.outputs.imageUrl }}
+          echo tag=${{ steps.vardef.outputs.imageName }} ${{ steps.vardef.outputs.imageId }}:${{ steps.vardef.outputs.imageVersion }}
+          
