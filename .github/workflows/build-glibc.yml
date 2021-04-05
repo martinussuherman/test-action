@@ -11,20 +11,35 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Variable Definition
+        id: vardef
+        run: |
+          VER=2.33
+          PREFIX=$HOME/build/glibc
+          echo ::set-output name=version::${VER}
+          echo ::set-output name=prefix::${PREFIX}
+
       - name: Clone glibc Repo
         run: |
+          version=${{ steps.vardef.outputs.version }}
           mkdir $HOME/src
           cd $HOME/src
           git clone git://sourceware.org/git/glibc.git
           cd glibc
-          git checkout release/2.33/master
+          git checkout release/$version/master
           chmod +x $HOME/src/glibc/configure
 
       - name: Building Glibc
         run: |
-          prefix=$HOME/build/glibc
+          version=${{ steps.vardef.outputs.version }}
+          prefix={{ steps.vardef.outputs.prefix }}
           mkdir -p $HOME/build/glibc
           cd $HOME/build/glibc
           $HOME/src/glibc/configure --prefix="$prefix" --libdir="$prefix/lib" --libexecdir="$prefix/lib" --enable-multi-arch --enable-stack-protector=strong
           make          
           tar --dereference --hard-dereference -zcf "$HOME/glibc-bin-$version.tar.gz" "$prefix"
+
+      - name: Upload build result as artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          path: $HOME/glibc-bin-${{ steps.vardef.outputs.version }}.tar.gz
