@@ -16,10 +16,17 @@ jobs:
         run: |
           version=2.33
           prefix=/usr/glibc-compat
-          git clone https://sourceware.org/git/glibc.git
+          mkdir $HOME/src
+          cd $HOME/src
+          git clone git://sourceware.org/git/glibc.git
           cd glibc
           git checkout release/2.33/master
-          chmod +x configure
-          ./configure --prefix="$prefix" --libdir="$prefix/lib" --libexecdir="$prefix/lib" --enable-multi-arch --enable-stack-protector=strong
-          make && make install
+          mkdir -p $HOME/build/glibc
+          cd $HOME/build/glibc
+          chmod +x $HOME/src/glibc/configure
+          $HOME/src/glibc/configure --prefix=/usr --enable-multi-arch --enable-stack-protector=strong
+          make          
           tar --dereference --hard-dereference -zcf "/glibc-bin-$version.tar.gz" "$prefix"
+
+      # ./configure --prefix="$prefix" --libdir="$prefix/lib" --libexecdir="$prefix/lib" --enable-multi-arch --enable-stack-protector=strong
+      # make && make install
