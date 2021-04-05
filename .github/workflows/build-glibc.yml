@@ -17,6 +17,7 @@ jobs:
           version=2.33
           prefix=/usr/glibc-compat
           wget -qO- "https://ftpmirror.gnu.org/libc/glibc-$version.tar.gz" | tar zxf -
+          chmod +x configure
           ./configure --prefix="$prefix" --libdir="$prefix/lib" --libexecdir="$prefix/lib" --enable-multi-arch --enable-stack-protector=strong
           make && make install
           tar --dereference --hard-dereference -zcf "/glibc-bin-$version.tar.gz" "$prefix"
