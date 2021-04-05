@@ -14,8 +14,10 @@ jobs:
       - name: Building Glibc
         id: glibcbuild
         run: |
-          GLIBC_VERSION=2.33
-          PREFIX_DIR=/usr/glibc-compat
-          cd glibc-build
-          chmod +x builder.sh
-          ./builder.sh
+          version=2.33
+          prefix=/usr/glibc-compat
+          wget -qO- "https://ftpmirror.gnu.org/libc/glibc-$version.tar.gz" | tar zxf -
+          mkdir -p /glibc-build && cd /glibc-build
+          "/glibc-$version/configure" --prefix="$prefix" --libdir="$prefix/lib" --libexecdir="$prefix/lib" --enable-multi-arch --enable-stack-protector=strong
+          make && make install
+          tar --dereference --hard-dereference -zcf "/glibc-bin-$version.tar.gz" "$prefix"
