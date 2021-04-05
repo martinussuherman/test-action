@@ -16,7 +16,9 @@ jobs:
         run: |
           version=2.33
           prefix=/usr/glibc-compat
-          wget -qO- "https://ftpmirror.gnu.org/libc/glibc-$version.tar.gz" | tar zxf -
+          git clone https://sourceware.org/git/glibc.git
+          cd glibc
+          git checkout release/2.33/master
           chmod +x configure
           ./configure --prefix="$prefix" --libdir="$prefix/lib" --libexecdir="$prefix/lib" --enable-multi-arch --enable-stack-protector=strong
           make && make install
