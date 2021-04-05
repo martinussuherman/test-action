@@ -36,10 +36,11 @@ jobs:
           mkdir -p $HOME/build/glibc
           cd $HOME/build/glibc
           $HOME/src/glibc/configure --prefix="$prefix" --libdir="$prefix/lib" --libexecdir="$prefix/lib" --enable-multi-arch --enable-stack-protector=strong
-          make          
+          make
           tar --dereference --hard-dereference -zcf "$HOME/glibc-bin-$version.tar.gz" "$prefix"
 
       - name: Upload build result as artifacts
         uses: actions/upload-artifact@v2
-        with:
-          path: $HOME/glibc-bin-${{ steps.vardef.outputs.version }}.tar.gz
+        with:	
+          name: 'glibc artifacts'
+          path: '~/glibc-bin-${{ steps.vardef.outputs.version }}.tar.gz'
