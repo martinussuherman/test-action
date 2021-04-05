@@ -11,22 +11,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Building Glibc
-        id: glibcbuild
+      - name: Clone glibc Repo
         run: |
-          version=2.33
-          prefix=/usr/glibc-compat
           mkdir $HOME/src
           cd $HOME/src
           git clone git://sourceware.org/git/glibc.git
           cd glibc
           git checkout release/2.33/master
+          chmod +x $HOME/src/glibc/configure
+
+      - name: Building Glibc
+        run: |
+          prefix=$HOME/build/glibc
           mkdir -p $HOME/build/glibc
           cd $HOME/build/glibc
-          chmod +x $HOME/src/glibc/configure
-          $HOME/src/glibc/configure --prefix=/usr --enable-multi-arch --enable-stack-protector=strong
+          $HOME/src/glibc/configure --prefix="$prefix" --libdir="$prefix/lib" --libexecdir="$prefix/lib" --enable-multi-arch --enable-stack-protector=strong
           make          
-          tar --dereference --hard-dereference -zcf "/glibc-bin-$version.tar.gz" "$prefix"
-
-      # ./configure --prefix="$prefix" --libdir="$prefix/lib" --libexecdir="$prefix/lib" --enable-multi-arch --enable-stack-protector=strong
-      # make && make install
+          tar --dereference --hard-dereference -zcf "$HOME/glibc-bin-$version.tar.gz" "$prefix"
