@@ -17,4 +17,5 @@ jobs:
           GLIBC_VERSION=2.33
           PREFIX_DIR=/usr/glibc-compat
           cd glibc-build
+          chmod +x builder.sh
           builder.sh
