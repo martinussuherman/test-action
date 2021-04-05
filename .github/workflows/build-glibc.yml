@@ -18,4 +18,4 @@ jobs:
           PREFIX_DIR=/usr/glibc-compat
           cd glibc-build
           chmod +x builder.sh
-          builder.sh
+          ./builder.sh
