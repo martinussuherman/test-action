@@ -1,0 +1,20 @@
+name: Build glibc multi arch
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-glibc:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Building Glibc
+        id: glibcbuild
+        run: |
+          GLIBC_VERSION=2.33
+          PREFIX_DIR=/usr/glibc-compat
+          cd glibc-build
+          builder.sh
