@@ -1,5 +1,5 @@
-FROM arm64v8/alpine:3.12.4
+FROM arm64v8/alpine:3.12
 RUN \
-   apk add --update curl && \
-   apk del curl && \
+   apk --no-cache --update add binutils gcc make && \
    rm -rf /var/cache/apk/*
+# TODO: copy build script file
