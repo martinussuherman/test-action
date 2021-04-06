@@ -36,7 +36,7 @@ jobs:
           mkdir -p $HOME/build/glibc
           cd $HOME/build/glibc
           $HOME/src/glibc/configure --prefix="$prefix" --libdir="$prefix/lib" --libexecdir="$prefix/lib" --enable-multi-arch --enable-stack-protector=strong
-          make
+          make && make install
           tar --dereference --hard-dereference -zcf "$HOME/glibc-bin-$version.tar.gz" "$prefix"
 
       - name: Upload build result as artifacts
