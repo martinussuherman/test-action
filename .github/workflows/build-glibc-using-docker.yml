@@ -33,7 +33,9 @@ jobs:
         tags: martinussuherman/test-action:glibc-builder-arm64v8
 
     - name: Run arm64v8 glibc builder image
-      run: docker run martinussuherman/test-action:glibc-builder-arm64v8 -v ~/:/usr/glibc-compat/
+      run: |
+        docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+        docker run martinussuherman/test-action:glibc-builder-arm64v8 -v ~/:/usr/glibc-compat/
 
     # - name: Upload build result as artifacts
     #   uses: actions/upload-artifact@v2
