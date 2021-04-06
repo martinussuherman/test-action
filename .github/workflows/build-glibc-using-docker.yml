@@ -19,7 +19,7 @@ jobs:
 
     - name: Create and run arm64v8 glibc builder image
       run: |
-        docker buildx build -t martinussuherman/alpine-glibc-builder:arm64v8 -f arm64v8/Dockerfile .
+        docker buildx build --load -t martinussuherman/alpine-glibc-builder:arm64v8 -f arm64v8/Dockerfile .
         docker run martinussuherman/alpine-glibc-builder:arm64v8 -v ~/:/usr/glibc-compat/
 
     # - name: Upload build result as artifacts
