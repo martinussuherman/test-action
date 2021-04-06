@@ -21,7 +21,7 @@ jobs:
       run: docker buildx build -t martinussuherman/alpine-glibc-builder:arm64v8 -f arm64v8/Dockerfile .
 
     - name: Run arm64v8 glibc builder image to build glibc
-      run: docker run -it --rm martinussuherman/alpine-glibc-builder:arm64v8 -v ~/:/usr/glibc-compat/
+      run: docker run martinussuherman/alpine-glibc-builder:arm64v8 -v ~/:/usr/glibc-compat/
 
     # - name: Upload build result as artifacts
     #   uses: actions/upload-artifact@v2
