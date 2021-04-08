@@ -26,7 +26,7 @@ jobs:
     - name: Build and push arm64v8 image
       uses: docker/build-push-action@v2
       with:
-        file: ./arm64v8/Dockerfile
+        file: ./builder-arm64v8/Dockerfile
         context: .
         platforms: linux/arm64
         push: true
@@ -34,11 +34,12 @@ jobs:
 
     - name: Run arm64v8 glibc builder image
       run: |
+        mkdir -p ~/artifact
         docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-        docker run martinussuherman/test-action:glibc-builder-arm64v8 -v ~/:/usr/glibc-compat/
+        docker run martinussuherman/test-action:glibc-builder-arm64v8 -v ~/artifact:/glibc-tar
 
-    # - name: Upload build result as artifacts
-    #   uses: actions/upload-artifact@v2
-    #   with:	
-    #     name: 'glibc artifacts'
-    #     path: '~/glibc-bin-${{ steps.vardef.outputs.version }}.tar.gz'
+    - name: Upload build result as artifacts
+      uses: actions/upload-artifact@v2
+      with:	
+        name: 'glibc-arm64v8'
+        path: '~/artifact/glibc-bin-${{ steps.vardef.outputs.version }}.tar.gz'
