@@ -16,7 +16,7 @@ RUN \
    texinfo \
    wget
 
-COPY configparams /glibc-build/configparams
+COPY glibc-build/configparams /glibc-build/configparams
 COPY glibc-build/builder.sh /builder
 
 ENTRYPOINT ["/builder"]
