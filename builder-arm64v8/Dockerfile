@@ -18,5 +18,6 @@ RUN \
 
 COPY glibc-build/configparams /glibc-build/configparams
 COPY glibc-build/builder.sh /builder
+RUN chmod +x /builder
 
 ENTRYPOINT ["/builder"]
