@@ -24,8 +24,8 @@ jobs:
         run: |
           VER=2.33
           PREFIX=$HOME/build/glibc
-          echo ::set-output name=version::${VER}
-          echo ::set-output name=prefix::${PREFIX}
+          echo "version=${VER}" >> $GITHUB_OUTPUT
+          echo "prefix=${PREFIX}" >> $GITHUB_OUTPUT
 
       - name: Clone glibc Repo
         run: |
