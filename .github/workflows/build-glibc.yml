@@ -51,8 +51,7 @@ jobs:
         run: |
           version=${{ steps.vardef.outputs.version }}
           prefix=${{ steps.vardef.outputs.prefix }}
-          mkdir -p $HOME/build/glibc-aarch64
-          cd $HOME/build/glibc-aarch64
+          cd $HOME/build/glibc
           $HOME/src/glibc/configure --build x86_64-pc-linux-gnu --host aarch64-linux-gnu --enable-mpers=check --prefix="$prefix" --libdir="$prefix/lib" --libexecdir="$prefix/lib" --enable-stack-protector=strong
           make && make install
           tar --dereference --hard-dereference -zcf "$HOME/glibc-bin-aarch64-$version.tar.gz" "$prefix"
