@@ -11,6 +11,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Install Cross Compile Package for arm64v8
+        run: |
+          sudo apt install |
+          gcc-aarch64-linux-gnu |
+          binutils-aarch64-linux-gnu |
+          binutils-aarch64-linux-gnu-dbg |
+          build-essential
+
       - name: Variable Definition
         id: vardef
         run: |
