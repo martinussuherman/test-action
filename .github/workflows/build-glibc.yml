@@ -61,6 +61,6 @@ jobs:
         with:	
           name: 'glibc artifacts'
           path: |
-            '~/glibc-bin-x86-64-${{ steps.vardef.outputs.version }}.tar.gz'
-            '~/glibc-bin-aarch64-${{ steps.vardef.outputs.version }}.tar.gz'
+            $HOME/glibc-bin-x86-64-${{ steps.vardef.outputs.version }}.tar.gz
+            $HOME/glibc-bin-aarch64-${{ steps.vardef.outputs.version }}.tar.gz
             
