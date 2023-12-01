@@ -61,4 +61,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:	
           name: 'glibc artifacts'
-          path: '~/glibc-bin-${{ steps.vardef.outputs.version }}.tar.gz'
+          path: |
+            '~/glibc-bin-x86-64-${{ steps.vardef.outputs.version }}.tar.gz'
+            '~/glibc-bin-aarch64-${{ steps.vardef.outputs.version }}.tar.gz'
+            
