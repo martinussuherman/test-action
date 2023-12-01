@@ -37,7 +37,7 @@ jobs:
           git checkout release/$version/master
           chmod +x $HOME/src/glibc/configure
 
-      - name: Building Glibc
+      - name: Building Glibc x86-64
         run: |
           version=${{ steps.vardef.outputs.version }}
           prefix=${{ steps.vardef.outputs.prefix }}
@@ -45,7 +45,7 @@ jobs:
           cd $HOME/build/glibc
           $HOME/src/glibc/configure --prefix="$prefix" --libdir="$prefix/lib" --libexecdir="$prefix/lib" --enable-multi-arch --enable-stack-protector=strong
           make && make install
-          tar --dereference --hard-dereference -zcf "$HOME/glibc-bin-$version.tar.gz" "$prefix"
+          tar --dereference --hard-dereference -zcf "$HOME/glibc-bin-x86-64-$version.tar.gz" "$prefix"
 
       - name: Upload build result as artifacts
         uses: actions/upload-artifact@v3
