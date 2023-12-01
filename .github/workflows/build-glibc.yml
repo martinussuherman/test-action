@@ -13,10 +13,10 @@ jobs:
 
       - name: Install Cross Compile Package for arm64v8
         run: |
-          sudo apt install |
-          gcc-aarch64-linux-gnu |
-          binutils-aarch64-linux-gnu |
-          binutils-aarch64-linux-gnu-dbg |
+          sudo apt install \
+          gcc-aarch64-linux-gnu \
+          binutils-aarch64-linux-gnu \
+          binutils-aarch64-linux-gnu-dbg \
           build-essential
 
       - name: Variable Definition
