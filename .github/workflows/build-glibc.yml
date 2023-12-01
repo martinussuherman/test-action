@@ -40,7 +40,7 @@ jobs:
           tar --dereference --hard-dereference -zcf "$HOME/glibc-bin-$version.tar.gz" "$prefix"
 
       - name: Upload build result as artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:	
           name: 'glibc artifacts'
           path: '~/glibc-bin-${{ steps.vardef.outputs.version }}.tar.gz'
